@@ -9,9 +9,10 @@
 
 
     <ImageView
-        android:layout_width="406dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/rick_and_morty"/>
+        android:src="@drawable/rick_and_morty"
+        android:elevation="4dp"/>
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
