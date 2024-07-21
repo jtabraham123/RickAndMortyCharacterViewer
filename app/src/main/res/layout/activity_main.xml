@@ -12,21 +12,23 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    </FrameLayout>
 
         <include layout="@layout/content_main" />
+        <!-- TODO: make the layout width just enough for back button to exist
+         TODO: and change constraint margins on the header so that it can exist-->
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+    </FrameLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
