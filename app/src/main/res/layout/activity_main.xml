@@ -8,12 +8,10 @@
     tools:context=".MainActivity">
 
 
-    <ImageView
+    <!-- FrameLayout to manage layering -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/rick_and_morty"
-        android:elevation="4dp"/>
-
+        android:layout_height="match_parent">
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +24,9 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    </FrameLayout>
+
+        <include layout="@layout/content_main" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
