@@ -18,7 +18,7 @@
          TODO: and change constraint margins on the header so that it can exist-->
 
         <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="30dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true">
 

@@ -12,58 +12,82 @@
 
     <ImageView
         android:id="@+id/rickAndMortyImage"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         android:adjustViewBounds="true"
         android:elevation="4dp"
         android:src="@drawable/header_rick_and_morty"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toRightOf="parent"
-        app:layout_constraintRight_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <Button
-        android:id="@+id/aliveButton"
-        android:layout_width="150dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="40dp"
-        android:text="Alive"
-        app:layout_constraintBottom_toTopOf="@+id/deadButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
-    <Button
-        android:id="@+id/deadButton"
-        android:layout_width="150dp"
-        android:layout_height="60dp"
-        android:text="Dead"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/unknownButton"
-        android:layout_width="150dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="40dp"
-        android:text="Unknown"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/deadButton" />
-
-    <ImageView
-        android:id="@+id/getSchwifty"
+    <FrameLayout
         android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:adjustViewBounds="true"
-        android:src="@drawable/get_schwifty"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toTopOf="@id/getSchwifty"
+        app:layout_constraintEnd_toEndOf="@+id/rickAndMortyImage"
+        app:layout_constraintStart_toStartOf="@+id/rickAndMortyImage"
+        app:layout_constraintTop_toBottomOf="@id/rickAndMortyImage">
+
+        <ImageView
+            android:id="@+id/portalRickAndMortyImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:src="@drawable/portal_rick_and_morty" />
+
+        <!-- ConstraintLayout for buttons -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <Button
+                android:id="@+id/aliveButton"
+                android:layout_width="150dp"
+                android:layout_height="60dp"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="@color/portalGreen"
+                android:text="Alive"
+                app:layout_constraintBottom_toTopOf="@+id/deadButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <Button
+                android:id="@+id/deadButton"
+                android:layout_width="150dp"
+                android:layout_height="60dp"
+                android:backgroundTint="@color/portalGreen"
+                android:text="Dead"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/unknownButton"
+                android:layout_width="150dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="40dp"
+                android:backgroundTint="@color/portalGreen"
+                android:text="Unknown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/deadButton" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
+            <ImageView
+                android:id="@+id/getSchwifty"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/get_schwifty"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
