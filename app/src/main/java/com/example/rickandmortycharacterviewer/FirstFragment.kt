@@ -33,8 +33,18 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.aliveButton.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            navigateToMultiCharacterView()
         }
+        binding.deadButton.setOnClickListener {
+            navigateToMultiCharacterView()
+        }
+        binding.unknownButton.setOnClickListener {
+            navigateToMultiCharacterView()
+        }
+    }
+
+    fun navigateToMultiCharacterView() {
+        findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
     }
 
     override fun onDestroyView() {
