@@ -1,5 +1,7 @@
 package com.example.rickandmortycharacterviewer
 
+import android.util.Log
+import android.widget.Switch
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +14,17 @@ class CharacterListViewModel @Inject constructor() : ViewModel() {
     private val _headerText = MutableLiveData<String>()
     val headerText: LiveData<String> get() = _headerText
 
-    fun setText(newText: String) {
-        _headerText.value = newText
+    fun onButtonClicked(buttonClicked: Buttons) {
+        when (buttonClicked) {
+            Buttons.ALIVE -> setHeaderText("Alive Characters")
+            Buttons.DEAD -> setHeaderText("Dead Characters")
+            Buttons.UNKNOWN -> setHeaderText("Unknown Characters")
+        }
     }
+
+    fun setHeaderText(newText: String) {
+        _headerText.value = newText
+        Log.d("Jack", "Setting header")
+    }
+
 }

@@ -7,7 +7,7 @@
     android:gravity="center"
     android:layout_gravity="center"
     android:orientation="horizontal"
-    tools:context=".FirstFragment">
+    tools:context=".MainScreenFragment">
 
 
     <ImageView
@@ -24,7 +24,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/statusChoice"
         android:textColor="@color/black"
@@ -59,7 +59,7 @@
 
             <Button
                 android:id="@+id/aliveButton"
-                android:layout_width="150dp"
+                android:layout_width="170dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="40dp"
                 android:backgroundTint="@color/portalGreen"
@@ -71,7 +71,7 @@
 
             <Button
                 android:id="@+id/deadButton"
-                android:layout_width="150dp"
+                android:layout_width="170dp"
                 android:layout_height="60dp"
                 android:backgroundTint="@color/portalGreen"
                 android:text="Dead"
@@ -82,7 +82,7 @@
 
             <Button
                 android:id="@+id/unknownButton"
-                android:layout_width="150dp"
+                android:layout_width="170dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="40dp"
                 android:backgroundTint="@color/portalGreen"

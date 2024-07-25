@@ -1,10 +1,13 @@
 package com.example.rickandmortycharacterviewer
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.rickandmortycharacterviewer.databinding.MainScreenFragmentBinding
 
@@ -14,6 +17,8 @@ import com.example.rickandmortycharacterviewer.databinding.MainScreenFragmentBin
 class MainScreenFragment : Fragment() {
 
     private var _binding: MainScreenFragmentBinding? = null
+
+    private val characterListViewModel by activityViewModels<CharacterListViewModel>()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -32,13 +37,18 @@ class MainScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.d("VM", "VM in Frag1: " + characterListViewModel.hashCode())
+
         binding.aliveButton.setOnClickListener {
+            characterListViewModel.onButtonClicked(Buttons.ALIVE)
             navigateToMultiCharacterView()
         }
         binding.deadButton.setOnClickListener {
+            characterListViewModel.onButtonClicked(Buttons.DEAD)
             navigateToMultiCharacterView()
         }
         binding.unknownButton.setOnClickListener {
+            characterListViewModel.onButtonClicked(Buttons.UNKNOWN)
             navigateToMultiCharacterView()
         }
     }
