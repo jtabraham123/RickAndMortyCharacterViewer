@@ -14,7 +14,9 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.view.WindowCompat
 import com.example.rickandmortycharacterviewer.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

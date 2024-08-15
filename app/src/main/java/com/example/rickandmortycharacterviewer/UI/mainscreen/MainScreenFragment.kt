@@ -1,4 +1,4 @@
-package com.example.rickandmortycharacterviewer
+package com.example.rickandmortycharacterviewer.ui.mainscreen
 
 import android.os.Bundle
 import android.util.Log
@@ -7,13 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.rickandmortycharacterviewer.util.Buttons
+import com.example.rickandmortycharacterviewer.R
 import com.example.rickandmortycharacterviewer.databinding.MainScreenFragmentBinding
+import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
+@AndroidEntryPoint
 class MainScreenFragment : Fragment() {
 
     private var _binding: MainScreenFragmentBinding? = null

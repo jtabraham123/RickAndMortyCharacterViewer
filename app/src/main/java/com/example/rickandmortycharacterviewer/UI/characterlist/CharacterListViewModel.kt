@@ -1,10 +1,10 @@
-package com.example.rickandmortycharacterviewer
+package com.example.rickandmortycharacterviewer.ui.characterlist
 
 import android.util.Log
-import android.widget.Switch
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.rickandmortycharacterviewer.util.Buttons
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

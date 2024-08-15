@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/MainScreenFragment"
-        android:name="com.example.rickandmortycharacterviewer.MainScreenFragment"
+        android:name="com.example.rickandmortycharacterviewer.ui.mainscreen.MainScreenFragment"
         tools:layout="@layout/main_screen_fragment">
 
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/CharacterListFragment"
-        android:name="com.example.rickandmortycharacterviewer.CharacterListFragment"
+        android:name="com.example.rickandmortycharacterviewer.UI.characterlist.CharacterListFragment"
         tools:layout="@layout/character_list_fragment">
 
         <action
