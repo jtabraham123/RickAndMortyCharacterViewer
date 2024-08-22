@@ -13,7 +13,7 @@ class CharacterRepository @Inject constructor(
     suspend fun getCharacters(status: String) {
         withContext(Dispatchers.IO) {
             val obj = characterService.getCharactersByStatus(status)
-            Log.d("info", obj.info.pages.toString())
+            Log.d("infoJ", obj.info.pages.toString())
         }
     }
 

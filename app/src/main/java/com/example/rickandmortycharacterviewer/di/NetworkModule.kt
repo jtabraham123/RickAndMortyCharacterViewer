@@ -32,7 +32,7 @@ class NetworkModule {
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .baseUrl("https://rickandmortyapi.com/api/character")
+        .baseUrl("https://rickandmortyapi.com/api/")
         .client(okHttpClient)
         .build()
 
