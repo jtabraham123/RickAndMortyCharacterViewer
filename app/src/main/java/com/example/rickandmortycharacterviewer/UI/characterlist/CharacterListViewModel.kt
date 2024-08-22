@@ -4,13 +4,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.rickandmortycharacterviewer.network.CharacterService
 import com.example.rickandmortycharacterviewer.util.Buttons
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 
 @HiltViewModel
-class CharacterListViewModel @Inject constructor() : ViewModel() {
+class CharacterListViewModel @Inject constructor(
+    private val characterService: CharacterService
+) : ViewModel() {
     private val _headerText = MutableLiveData<String>()
     val headerText: LiveData<String> get() = _headerText
 
@@ -20,6 +23,10 @@ class CharacterListViewModel @Inject constructor() : ViewModel() {
             Buttons.DEAD -> setHeaderText("Dead Characters")
             Buttons.UNKNOWN -> setHeaderText("Unknown Characters")
         }
+    }
+
+    fun callAPI() {
+        
     }
 
     fun setHeaderText(newText: String) {

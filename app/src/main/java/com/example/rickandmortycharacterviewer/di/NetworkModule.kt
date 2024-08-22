@@ -1,5 +1,6 @@
 package com.example.rickandmortycharacterviewer.di
 
+import com.example.rickandmortycharacterviewer.network.CharacterService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -29,17 +30,15 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    // TODO: figure out URL handling here
     fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .baseUrl(BuildConfig.CharacterURLBASE)
+        .baseUrl("https://rickandmortyapi.com/api/character")
         .client(okHttpClient)
         .build()
-    /*
+
     @Provides
     @Singleton
     fun provideCharacterService(retrofit: Retrofit): CharacterService =
         retrofit.create(CharacterService::class.java)
-        */
 
 }
