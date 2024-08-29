@@ -22,8 +22,6 @@ class MainScreenFragment : Fragment() {
 
     private var _binding: MainScreenFragmentBinding? = null
 
-    private val characterListViewModel by activityViewModels<CharacterListViewModel>()
-
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -41,24 +39,20 @@ class MainScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("VM", "VM in Frag1: " + characterListViewModel.hashCode())
-
         binding.aliveButton.setOnClickListener {
-            characterListViewModel.onButtonClicked(Buttons.ALIVE)
-            navigateToMultiCharacterView()
+            navigateToMultiCharacterView("Alive")
         }
         binding.deadButton.setOnClickListener {
-            characterListViewModel.onButtonClicked(Buttons.DEAD)
-            navigateToMultiCharacterView()
+            navigateToMultiCharacterView("Dead")
         }
         binding.unknownButton.setOnClickListener {
-            characterListViewModel.onButtonClicked(Buttons.UNKNOWN)
-            navigateToMultiCharacterView()
+            navigateToMultiCharacterView("Unknown")
         }
     }
 
-    fun navigateToMultiCharacterView() {
-        findNavController().navigate(R.id.action_MainScreenFragment_to_CharacterListFragment)
+    fun navigateToMultiCharacterView(status: String) {
+        val action = MainScreenFragmentDirections.actionMainScreenFragmentToCharacterListFragment(status)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

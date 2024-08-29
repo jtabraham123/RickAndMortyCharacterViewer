@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListViewModel
 import com.example.rickandmortycharacterviewer.R
@@ -25,7 +26,7 @@ class CharacterListFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private val characterListViewModel by activityViewModels<CharacterListViewModel>()
+    private val characterListViewModel by viewModels<CharacterListViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

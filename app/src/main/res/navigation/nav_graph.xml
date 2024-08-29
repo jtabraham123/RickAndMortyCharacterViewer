@@ -19,6 +19,10 @@
         android:name="com.example.rickandmortycharacterviewer.UI.characterlist.CharacterListFragment"
         tools:layout="@layout/character_list_fragment">
 
+        <argument
+            android:name="characterStatus"
+            app:argType="string" />
+
         <action
             android:id="@+id/action_CharacterListFragment_to_MainScreenFragment"
             app:destination="@id/MainScreenFragment" />
