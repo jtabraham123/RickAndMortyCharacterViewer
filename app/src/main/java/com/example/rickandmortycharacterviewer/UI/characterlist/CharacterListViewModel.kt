@@ -23,6 +23,7 @@ class CharacterListViewModel @Inject constructor(
 ) : ViewModel() {
     private val _headerText = MutableLiveData<String>()
     val headerText: LiveData<String> get() = _headerText
+    //private val
 
 
     init {
