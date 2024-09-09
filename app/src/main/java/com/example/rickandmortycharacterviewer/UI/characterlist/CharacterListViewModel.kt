@@ -72,10 +72,38 @@ class CharacterListViewModel @Inject constructor(
 
                 "Dead" -> {
                     // Code to execute if expression == value2
+                    characterRepository.deadCharactersFlow.collect{ deadCharacters ->
+                        Log.d("Test1" , deadCharacters.size.toString())
+                        if (deadCharacters.size != 0) {
+
+                        }
+                        /*
+                        if (currentWeather != null) {
+                            currentWeatherMutableStateFlow.value = NetworkResult.Success(currentWeather.asCurrentWeatherDomainModel())
+
+                            dailyForecastWeatherListMutableStateFlow.value =
+                                NetworkResult.Success(currentWeather.forecast.asCurrentWeatherDailyForecastDomainModel())
+                        }
+                        */
+                    }
                 }
 
                 "Unknown" -> {
                     // Code to execute if none of the above conditions match
+                    characterRepository.unknownCharactersFlow.collect{ unknownCharacters ->
+                        Log.d("Test1" , unknownCharacters.size.toString())
+                        if (unknownCharacters.size != 0) {
+
+                        }
+                        /*
+                        if (currentWeather != null) {
+                            currentWeatherMutableStateFlow.value = NetworkResult.Success(currentWeather.asCurrentWeatherDomainModel())
+
+                            dailyForecastWeatherListMutableStateFlow.value =
+                                NetworkResult.Success(currentWeather.forecast.asCurrentWeatherDailyForecastDomainModel())
+                        }
+                        */
+                    }
                 }
             }
         }

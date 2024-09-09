@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.rickandmortycharacterviewer.util.Buttons
 import com.example.rickandmortycharacterviewer.R
 import com.example.rickandmortycharacterviewer.databinding.MainScreenFragmentBinding
 import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListViewModel

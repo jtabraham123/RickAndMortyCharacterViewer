@@ -9,22 +9,28 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 
 class CharacterRepository @Inject constructor(
     private val characterService: CharacterService) {
 
-    // TODO: only expose the read only flow, these should be private
-    val aliveCharactersFlow: MutableStateFlow<List<CharacterResponse>> = MutableStateFlow(listOf())
-    val aliveCharactersList: MutableList<CharacterResponse> = mutableListOf()
-    val deadCharactersFlow: MutableStateFlow<List<CharacterResponse>> = MutableStateFlow(listOf())
-    val deadCharactersList: MutableList<CharacterResponse> = mutableListOf()
-    val unknownCharactersFlow: MutableStateFlow<List<CharacterResponse>> = MutableStateFlow(listOf())
-    val unknownCharactersList: MutableList<CharacterResponse> = mutableListOf()
+    // TODO: Check why they need to be private again lol
+    private val _aliveCharactersFlow: MutableStateFlow<List<CharacterResponse>> = MutableStateFlow(listOf())
+    val aliveCharactersFlow: StateFlow<List<CharacterResponse>> = _aliveCharactersFlow
+    private val aliveCharactersList: MutableList<CharacterResponse> = mutableListOf()
 
+    private val _deadCharactersFlow: MutableStateFlow<List<CharacterResponse>> = MutableStateFlow(listOf())
+    val deadCharactersFlow: StateFlow<List<CharacterResponse>> = _deadCharactersFlow
+    private val deadCharactersList: MutableList<CharacterResponse> = mutableListOf()
+
+    private val _unknownCharactersFlow: MutableStateFlow<List<CharacterResponse>> = MutableStateFlow(listOf())
+    val unknownCharactersFlow: StateFlow<List<CharacterResponse>> = _unknownCharactersFlow
+    private val unknownCharactersList: MutableList<CharacterResponse> = mutableListOf()
+
+    // TODO: Only make network call if the characters dont already exist in the repo
     suspend fun getCharacters(status: String) {
         withContext(Dispatchers.IO) {
-            val j = 1
             var characterResponse = characterService.getCharactersByStatus(status)
             val pages = characterResponse.info.pages
             addToList(status, characterResponse)
@@ -39,16 +45,15 @@ class CharacterRepository @Inject constructor(
         when (status) {
             "alive" -> {
                 aliveCharactersList.add(characterResponse)
-                Log.d("Test1", "size of list" + aliveCharactersList.size)
-                aliveCharactersFlow.value = aliveCharactersList.toList()
+                _aliveCharactersFlow.value = aliveCharactersList.toList()
             }
             "dead" -> {
                 deadCharactersList.add(characterResponse)
-                deadCharactersFlow.value = deadCharactersList.toList()
+                _deadCharactersFlow.value = deadCharactersList.toList()
             }
             "unknown" -> {
                 unknownCharactersList.add(characterResponse)
-                unknownCharactersFlow.value = unknownCharactersList.toList()
+                _unknownCharactersFlow.value = unknownCharactersList.toList()
             }
         }
     }
