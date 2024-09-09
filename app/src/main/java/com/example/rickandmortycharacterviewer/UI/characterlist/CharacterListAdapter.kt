@@ -3,11 +3,20 @@ package com.example.rickandmortycharacterviewer.UI.characterlist
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmortycharacterviewer.databinding.CharacterListItemBinding
+import com.example.rickandmortycharacterviewer.ui.domain.CharacterListItem
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
 @FragmentScoped
 class CharacterListAdapter @Inject constructor() : RecyclerView.Adapter<CharacterListItemViewHolder>(){
+
+    var characterList: List<CharacterListItem> = emptyList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterListItemViewHolder {
         TODO("Not yet implemented")
     }
@@ -25,4 +34,4 @@ class CharacterListAdapter @Inject constructor() : RecyclerView.Adapter<Characte
 class CharacterListItemViewHolder(private val itemBinding: CharacterListItemBinding) :
     RecyclerView.ViewHolder(itemBinding.root) {
 
-}
+    }

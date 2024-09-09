@@ -12,6 +12,7 @@ import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListVie
 import com.example.rickandmortycharacterviewer.R
 import com.example.rickandmortycharacterviewer.databinding.CharacterListFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -25,6 +26,9 @@ class CharacterListFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var characterListAdapter: CharacterListAdapter
 
     private val characterListViewModel by viewModels<CharacterListViewModel>()
 
@@ -51,6 +55,8 @@ class CharacterListFragment : Fragment() {
             findNavController().navigate(R.id.action_CharacterListFragment_to_MainScreenFragment)
         }
         // apply the adapter
+        binding.rvCharactersList.apply {}
+
     }
 
     override fun onDestroyView() {
