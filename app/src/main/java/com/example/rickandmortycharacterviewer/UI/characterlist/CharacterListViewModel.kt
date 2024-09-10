@@ -11,6 +11,8 @@ import com.example.rickandmortycharacterviewer.repository.CharacterRepository
 import com.example.rickandmortycharacterviewer.ui.domain.CharacterListItem
 import com.example.rickandmortycharacterviewer.ui.uistate.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
@@ -24,8 +26,8 @@ class CharacterListViewModel @Inject constructor(
     private val _headerText = MutableLiveData<String>()
     val headerText: LiveData<String> get() = _headerText
     private val _characterList =
-        MutableLiveData<NetworkResult<List<CharacterListItem>>>(NetworkResult.Loading())
-    val characterList: LiveData<NetworkResult<List<CharacterListItem>>> get() = _characterList
+        MutableStateFlow<NetworkResult<List<CharacterListItem>>>(NetworkResult.Loading())
+    val characterList: StateFlow<NetworkResult<List<CharacterListItem>>> get() = _characterList
 
     //private val
 
@@ -53,11 +55,11 @@ class CharacterListViewModel @Inject constructor(
         viewModelScope.launch {
             when (newStatus) {
                 "Alive" -> {
-                    // Code to execute if expression == value1
                     characterRepository.aliveCharactersFlow.collect{ aliveCharacters ->
                         Log.d("Test1" , aliveCharacters.size.toString())
-                        if (aliveCharacters.size != 0) {
-
+                        if (aliveCharacters.isNotEmpty()) {
+                             val characters = aliveCharacters.map {it.asListItemDomainModel()}.flatten()
+                            _characterList.value = NetworkResult.Success(characters)
                         }
                         /*
                         if (currentWeather != null) {
@@ -69,22 +71,13 @@ class CharacterListViewModel @Inject constructor(
                         */
                     }
                 }
-
                 "Dead" -> {
-                    // Code to execute if expression == value2
                     characterRepository.deadCharactersFlow.collect{ deadCharacters ->
                         Log.d("Test1" , deadCharacters.size.toString())
-                        if (deadCharacters.size != 0) {
+                        if (deadCharacters.isNotEmpty()) {
 
                         }
-                        /*
-                        if (currentWeather != null) {
-                            currentWeatherMutableStateFlow.value = NetworkResult.Success(currentWeather.asCurrentWeatherDomainModel())
 
-                            dailyForecastWeatherListMutableStateFlow.value =
-                                NetworkResult.Success(currentWeather.forecast.asCurrentWeatherDailyForecastDomainModel())
-                        }
-                        */
                     }
                 }
 
@@ -92,17 +85,9 @@ class CharacterListViewModel @Inject constructor(
                     // Code to execute if none of the above conditions match
                     characterRepository.unknownCharactersFlow.collect{ unknownCharacters ->
                         Log.d("Test1" , unknownCharacters.size.toString())
-                        if (unknownCharacters.size != 0) {
+                        if (unknownCharacters.isNotEmpty()) {
 
                         }
-                        /*
-                        if (currentWeather != null) {
-                            currentWeatherMutableStateFlow.value = NetworkResult.Success(currentWeather.asCurrentWeatherDomainModel())
-
-                            dailyForecastWeatherListMutableStateFlow.value =
-                                NetworkResult.Success(currentWeather.forecast.asCurrentWeatherDailyForecastDomainModel())
-                        }
-                        */
                     }
                 }
             }
