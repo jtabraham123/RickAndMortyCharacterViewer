@@ -7,11 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListViewModel
 import com.example.rickandmortycharacterviewer.R
 import com.example.rickandmortycharacterviewer.databinding.CharacterListFragmentBinding
+import com.example.rickandmortycharacterviewer.ui.uistate.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -48,6 +53,17 @@ class CharacterListFragment : Fragment() {
     }
 
     fun initView() {
+        // TODO: Handle screen rotation (fragment/activity death)
+        viewLifecycleOwner.lifecycleScope.launch {
+            // repeatOnLifecycle launches the block in a new coroutine every time the
+            // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    observeCharacterListFlow()
+                }
+            }
+        }
+
         characterListViewModel.headerText.observe(viewLifecycleOwner) { newHeader ->
             binding.textViewHeader.text = newHeader
         }
@@ -57,6 +73,17 @@ class CharacterListFragment : Fragment() {
         // apply the adapter
         binding.rvCharactersList.apply {}
 
+    }
+
+    suspend fun observeCharacterListFlow() {
+        characterListViewModel.characterListFlow.collect { networkResult ->
+            when (networkResult) {
+                is NetworkResult.Success -> TODO()
+                is NetworkResult.Loading -> TODO()
+                is NetworkResult.Error -> TODO()
+            }
+
+        }
     }
 
     override fun onDestroyView() {

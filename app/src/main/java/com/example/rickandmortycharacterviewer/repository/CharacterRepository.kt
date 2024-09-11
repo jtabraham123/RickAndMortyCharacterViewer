@@ -16,16 +16,16 @@ class CharacterRepository @Inject constructor(
     private val characterService: CharacterService) {
 
     // TODO: Check why they need to be private again lol
-    private val _aliveCharactersFlow: MutableStateFlow<List<CharacterResponse>> = MutableStateFlow(listOf())
-    val aliveCharactersFlow: StateFlow<List<CharacterResponse>> = _aliveCharactersFlow
+    private val _aliveCharactersFlow: MutableStateFlow<CharacterResponse?> = MutableStateFlow(null)
+    val aliveCharactersFlow: StateFlow<CharacterResponse?> = _aliveCharactersFlow
     private val aliveCharactersList: MutableList<CharacterResponse> = mutableListOf()
 
-    private val _deadCharactersFlow: MutableStateFlow<List<CharacterResponse>> = MutableStateFlow(listOf())
-    val deadCharactersFlow: StateFlow<List<CharacterResponse>> = _deadCharactersFlow
+    private val _deadCharactersFlow: MutableStateFlow<CharacterResponse?> = MutableStateFlow(null)
+    val deadCharactersFlow: StateFlow<CharacterResponse?> = _deadCharactersFlow
     private val deadCharactersList: MutableList<CharacterResponse> = mutableListOf()
 
-    private val _unknownCharactersFlow: MutableStateFlow<List<CharacterResponse>> = MutableStateFlow(listOf())
-    val unknownCharactersFlow: StateFlow<List<CharacterResponse>> = _unknownCharactersFlow
+    private val _unknownCharactersFlow: MutableStateFlow<CharacterResponse?> = MutableStateFlow(null)
+    val unknownCharactersFlow: StateFlow<CharacterResponse?> = _unknownCharactersFlow
     private val unknownCharactersList: MutableList<CharacterResponse> = mutableListOf()
 
     // TODO: Only make network call if the characters dont already exist in the repo
@@ -45,15 +45,15 @@ class CharacterRepository @Inject constructor(
         when (status) {
             "alive" -> {
                 aliveCharactersList.add(characterResponse)
-                _aliveCharactersFlow.value = aliveCharactersList.toList()
+                _aliveCharactersFlow.value = characterResponse
             }
             "dead" -> {
                 deadCharactersList.add(characterResponse)
-                _deadCharactersFlow.value = deadCharactersList.toList()
+                _deadCharactersFlow.value = characterResponse
             }
             "unknown" -> {
                 unknownCharactersList.add(characterResponse)
-                _unknownCharactersFlow.value = unknownCharactersList.toList()
+                _unknownCharactersFlow.value = characterResponse
             }
         }
     }

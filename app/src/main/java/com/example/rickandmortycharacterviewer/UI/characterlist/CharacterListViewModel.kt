@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.rickandmortycharacterviewer.model.CharacterResponse
 import com.example.rickandmortycharacterviewer.network.asListItemDomainModel
 import com.example.rickandmortycharacterviewer.repository.CharacterRepository
 import com.example.rickandmortycharacterviewer.ui.domain.CharacterListItem
@@ -25,9 +26,9 @@ class CharacterListViewModel @Inject constructor(
 ) : ViewModel() {
     private val _headerText = MutableLiveData<String>()
     val headerText: LiveData<String> get() = _headerText
-    private val _characterList =
+    private val _characterListFlow =
         MutableStateFlow<NetworkResult<List<CharacterListItem>>>(NetworkResult.Loading())
-    val characterList: StateFlow<NetworkResult<List<CharacterListItem>>> get() = _characterList
+    val characterListFlow: StateFlow<NetworkResult<List<CharacterListItem>>> get() = _characterListFlow
 
     //private val
 
@@ -38,7 +39,6 @@ class CharacterListViewModel @Inject constructor(
     }
 
     private fun getCharacters(characterStatus: String) {
-        // TODO: Figure out what exactly is the point of viewmodel scope
         viewModelScope.launch {
             characterStatus?.let {
                 try {
@@ -51,42 +51,30 @@ class CharacterListViewModel @Inject constructor(
         }
     }
 
+
     private fun observeCharacterFlow(newStatus: String) {
         viewModelScope.launch {
             when (newStatus) {
                 "Alive" -> {
                     characterRepository.aliveCharactersFlow.collect{ aliveCharacters ->
-                        Log.d("Test1" , aliveCharacters.size.toString())
-                        if (aliveCharacters.isNotEmpty()) {
-                             val characters = aliveCharacters.map {it.asListItemDomainModel()}.flatten()
-                            _characterList.value = NetworkResult.Success(characters)
+                        if (aliveCharacters != null) {
+                            _characterListFlow.value = NetworkResult.Success(aliveCharacters.asListItemDomainModel())
                         }
-                        /*
-                        if (currentWeather != null) {
-                            currentWeatherMutableStateFlow.value = NetworkResult.Success(currentWeather.asCurrentWeatherDomainModel())
-
-                            dailyForecastWeatherListMutableStateFlow.value =
-                                NetworkResult.Success(currentWeather.forecast.asCurrentWeatherDailyForecastDomainModel())
-                        }
-                        */
                     }
                 }
                 "Dead" -> {
                     characterRepository.deadCharactersFlow.collect{ deadCharacters ->
-                        Log.d("Test1" , deadCharacters.size.toString())
-                        if (deadCharacters.isNotEmpty()) {
-
+                        if (deadCharacters != null) {
+                            _characterListFlow.value = NetworkResult.Success(deadCharacters.asListItemDomainModel())
                         }
-
                     }
                 }
 
                 "Unknown" -> {
                     // Code to execute if none of the above conditions match
                     characterRepository.unknownCharactersFlow.collect{ unknownCharacters ->
-                        Log.d("Test1" , unknownCharacters.size.toString())
-                        if (unknownCharacters.isNotEmpty()) {
-
+                        if (unknownCharacters != null) {
+                            _characterListFlow.value = NetworkResult.Success(unknownCharacters.asListItemDomainModel())
                         }
                     }
                 }
