@@ -1,16 +1,17 @@
 package com.example.rickandmortycharacterviewer.UI.characterlist
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListViewModel
 import com.example.rickandmortycharacterviewer.R
 import com.example.rickandmortycharacterviewer.databinding.CharacterListFragmentBinding
@@ -70,17 +71,25 @@ class CharacterListFragment : Fragment() {
         binding.buttonSecond.setOnClickListener {
             findNavController().navigate(R.id.action_CharacterListFragment_to_MainScreenFragment)
         }
-        // apply the adapter
-        binding.rvCharactersList.apply {}
+
+        binding.rvCharactersList.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = characterListAdapter
+        }
 
     }
 
     suspend fun observeCharacterListFlow() {
         characterListViewModel.characterListFlow.collect { networkResult ->
             when (networkResult) {
-                is NetworkResult.Success -> TODO()
-                is NetworkResult.Loading -> TODO()
-                is NetworkResult.Error -> TODO()
+                is NetworkResult.Success -> {
+                    networkResult.data.let { characterItems ->
+                        characterListAdapter.addToCharacterList(characterItems)
+                        Log.d("characters", characterItems.size.toString())
+                    }
+                }
+                is NetworkResult.Loading -> {}
+                is NetworkResult.Error -> {}
             }
 
         }

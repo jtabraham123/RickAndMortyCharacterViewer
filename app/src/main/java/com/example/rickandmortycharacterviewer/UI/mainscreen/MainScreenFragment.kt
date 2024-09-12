@@ -1,16 +1,12 @@
 package com.example.rickandmortycharacterviewer.ui.mainscreen
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.rickandmortycharacterviewer.R
 import com.example.rickandmortycharacterviewer.databinding.MainScreenFragmentBinding
-import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

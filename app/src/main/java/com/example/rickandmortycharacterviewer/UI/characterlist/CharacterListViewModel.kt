@@ -1,12 +1,10 @@
 package com.example.rickandmortycharacterviewer.ui.characterlist
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.rickandmortycharacterviewer.model.CharacterResponse
 import com.example.rickandmortycharacterviewer.network.asListItemDomainModel
 import com.example.rickandmortycharacterviewer.repository.CharacterRepository
 import com.example.rickandmortycharacterviewer.ui.domain.CharacterListItem

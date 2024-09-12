@@ -1,5 +1,6 @@
 package com.example.rickandmortycharacterviewer.UI.characterlist
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmortycharacterviewer.databinding.CharacterListItemBinding
@@ -10,28 +11,34 @@ import javax.inject.Inject
 @FragmentScoped
 class CharacterListAdapter @Inject constructor() : RecyclerView.Adapter<CharacterListItemViewHolder>(){
 
-    var characterList: List<CharacterListItem> = emptyList()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    private var characterList: MutableList<CharacterListItem> = mutableListOf()
+
+    fun addToCharacterList(toAdd: List<CharacterListItem>) {
+        val firstIndex = characterList.size
+        characterList.addAll(toAdd)
+        notifyItemRangeChanged(firstIndex, toAdd.size)
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterListItemViewHolder {
-        TODO("Not yet implemented")
+        val binding = CharacterListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CharacterListItemViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount() = characterList.size
 
     override fun onBindViewHolder(holder: CharacterListItemViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val listItem = characterList[position]
+        holder.bind(listItem)
     }
 }
 
 
 class CharacterListItemViewHolder(private val itemBinding: CharacterListItemBinding) :
     RecyclerView.ViewHolder(itemBinding.root) {
-
+        fun bind(characterListItem: CharacterListItem) {
+            itemBinding.apply {
+                tvCharacterName.text = characterListItem.name
+            }
+        }
     }
