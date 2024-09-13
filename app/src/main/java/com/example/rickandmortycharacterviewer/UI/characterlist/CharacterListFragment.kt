@@ -1,4 +1,4 @@
-package com.example.rickandmortycharacterviewer.UI.characterlist
+package com.example.rickandmortycharacterviewer.ui.characterlist
 
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListViewModel
 import com.example.rickandmortycharacterviewer.R
 import com.example.rickandmortycharacterviewer.databinding.CharacterListFragmentBinding
+import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListAdapter
 import com.example.rickandmortycharacterviewer.ui.uistate.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -84,11 +85,14 @@ class CharacterListFragment : Fragment() {
             when (networkResult) {
                 is NetworkResult.Success -> {
                     networkResult.data.let { characterItems ->
+                        binding.pbLoadingSpinner.visibility = View.GONE
                         characterListAdapter.addToCharacterList(characterItems)
                         Log.d("characters", characterItems.size.toString())
                     }
                 }
-                is NetworkResult.Loading -> {}
+                is NetworkResult.Loading -> {
+                    binding.pbLoadingSpinner.visibility = View.VISIBLE
+                }
                 is NetworkResult.Error -> {}
             }
 

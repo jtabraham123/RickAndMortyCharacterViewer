@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/CharacterListFragment"
-        android:name="com.example.rickandmortycharacterviewer.UI.characterlist.CharacterListFragment"
+        android:name="com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListFragment"
         tools:layout="@layout/character_list_fragment">
 
         <argument

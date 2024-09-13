@@ -1,4 +1,4 @@
-package com.example.rickandmortycharacterviewer.UI.characterlist
+package com.example.rickandmortycharacterviewer.ui.characterlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

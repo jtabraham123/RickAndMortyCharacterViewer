@@ -1,5 +1,6 @@
 package com.example.rickandmortycharacterviewer.ui.characterlist
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -40,6 +41,7 @@ class CharacterListViewModel @Inject constructor(
         viewModelScope.launch {
             characterStatus?.let {
                 try {
+                    Log.d("characters", "fetching from network")
                     characterRepository.getCharacters(it)
                 } catch (networkError: IOException) {
                     // TODO: implement error handling
@@ -52,6 +54,7 @@ class CharacterListViewModel @Inject constructor(
 
     private fun observeCharacterFlow(newStatus: String) {
         viewModelScope.launch {
+            Log.d("characters", "new characters fetched")
             when (newStatus) {
                 "Alive" -> {
                     characterRepository.aliveCharactersFlow.collect{ aliveCharacters ->
