@@ -1,8 +1,14 @@
 package com.example.rickandmortycharacterviewer.ui.characterlist
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.example.rickandmortycharacterviewer.databinding.CharacterListItemBinding
 import com.example.rickandmortycharacterviewer.ui.domain.CharacterListItem
 import dagger.hilt.android.scopes.FragmentScoped
@@ -38,7 +44,34 @@ class CharacterListItemViewHolder(private val itemBinding: CharacterListItemBind
     RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(characterListItem: CharacterListItem) {
             itemBinding.apply {
-                tvCharacterName.text = characterListItem.name
+                characterListItem.apply{
+                    pbLoadingSpinnerImage.visibility = View.VISIBLE
+                    tvCharacterName.text = name
+                    Glide.with(ivCharacterIcon.context).load(imageURL).listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: com.bumptech.glide.request.target.Target<Drawable>,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            // Hide progress bar and show error message or placeholder
+                            pbLoadingSpinnerImage.visibility = View.GONE
+                            return false // Glide handles the error placeholder
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable,
+                            model: Any,
+                            target: com.bumptech.glide.request.target.Target<Drawable>?,
+                            dataSource: DataSource,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            pbLoadingSpinnerImage.visibility = View.GONE
+                            return false // Glide handles the error placeholder
+                        }
+                    }).into(ivCharacterIcon)
+                }
+
             }
         }
     }

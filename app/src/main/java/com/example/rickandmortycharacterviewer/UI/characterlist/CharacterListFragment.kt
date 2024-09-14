@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListViewModel
 import com.example.rickandmortycharacterviewer.R
 import com.example.rickandmortycharacterviewer.databinding.CharacterListFragmentBinding
@@ -86,6 +87,11 @@ class CharacterListFragment : Fragment() {
                 is NetworkResult.Success -> {
                     networkResult.data.let { characterItems ->
                         binding.pbLoadingSpinner.visibility = View.GONE
+                        for (character in characterItems) {
+                            activity?.let {
+                                Glide.with(it).load(character.imageURL).preload()
+                            }
+                        }
                         characterListAdapter.addToCharacterList(characterItems)
                         Log.d("characters", characterItems.size.toString())
                     }

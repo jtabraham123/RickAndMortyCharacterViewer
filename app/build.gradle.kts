@@ -4,6 +4,7 @@ plugins {
     id("androidx.navigation.safeargs")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -66,6 +67,11 @@ dependencies {
 
     // retrofit
     implementation(libs.retrofit)
+
+    // glide
+    implementation(libs.glide)
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
+
 
 
 }

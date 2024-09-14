@@ -9,22 +9,39 @@
     android:layout_marginBottom="16dp">
 
 
-    <ImageView
-        android:id="@+id/iv_character_icon"
+    <FrameLayout
+        android:id="@+id/frameLayout_character_icon"
         android:layout_width="60dp"
         android:layout_height="46dp"
         android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_character_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <ProgressBar
+            android:id="@+id/pb_loading_spinner_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
+
+    </FrameLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tv_character_name"
         android:layout_marginStart="16dp"
-        app:layout_constraintStart_toEndOf="@id/iv_character_icon"
+        app:layout_constraintStart_toEndOf="@id/frameLayout_character_icon"
         tools:text="Rick Sanchez"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
