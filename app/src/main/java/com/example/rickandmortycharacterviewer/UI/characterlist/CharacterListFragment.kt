@@ -58,7 +58,8 @@ class CharacterListFragment : Fragment() {
     fun initView() {
         /*
          TODO: Handle screen rotation (fragment/activity death) - causes the list view to
-        TODO: only populate with the latest flow
+        TODO: only populate with the latest flow - think about this for image loading too
+        TODO: Image loading should happen in view model context
         */
         viewLifecycleOwner.lifecycleScope.launch {
             // repeatOnLifecycle launches the block in a new coroutine every time the
