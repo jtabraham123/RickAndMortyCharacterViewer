@@ -1,6 +1,7 @@
 package com.example.rickandmortycharacterviewer.ui.characterlist
 
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,8 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.example.rickandmortycharacterviewer.databinding.CharacterListItemBinding
+import com.example.rickandmortycharacterviewer.network.GlideApp
+//import com.example.rickandmortycharacterviewer.network.GlideApp
 import com.example.rickandmortycharacterviewer.ui.domain.CharacterListItem
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
@@ -47,7 +50,7 @@ class CharacterListItemViewHolder(private val itemBinding: CharacterListItemBind
                 characterListItem.apply{
                     pbLoadingSpinnerImage.visibility = View.VISIBLE
                     tvCharacterName.text = name
-                    Glide.with(ivCharacterIcon.context).load(imageURL).listener(object : RequestListener<Drawable> {
+                    GlideApp.with(ivCharacterIcon.context).load(imageURL).listener(object : RequestListener<Drawable> {
                         override fun onLoadFailed(
                             e: GlideException?,
                             model: Any?,
@@ -55,6 +58,8 @@ class CharacterListItemViewHolder(private val itemBinding: CharacterListItemBind
                             isFirstResource: Boolean
                         ): Boolean {
                             // Hide progress bar and show error message or placeholder
+                            Log.d("Test", "Load failed: " + e.toString())
+
                             pbLoadingSpinnerImage.visibility = View.GONE
                             return false // Glide handles the error placeholder
                         }
@@ -66,6 +71,7 @@ class CharacterListItemViewHolder(private val itemBinding: CharacterListItemBind
                             dataSource: DataSource,
                             isFirstResource: Boolean
                         ): Boolean {
+                            Log.d("Test", "Load worked")
                             pbLoadingSpinnerImage.visibility = View.GONE
                             return false // Glide handles the error placeholder
                         }

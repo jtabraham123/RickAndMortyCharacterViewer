@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.rickandmortycharacterviewer.model.CharacterResponse
 import com.example.rickandmortycharacterviewer.model.CharacterResults
 import com.example.rickandmortycharacterviewer.network.CharacterService
+//import com.example.rickandmortycharacterviewer.network.GlideApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -18,22 +19,18 @@ class CharacterRepository @Inject constructor(
     // TODO: Check why they need to be private again lol
     private val _aliveCharactersFlow: MutableStateFlow<CharacterResponse?> = MutableStateFlow(null)
     val aliveCharactersFlow: StateFlow<CharacterResponse?> = _aliveCharactersFlow
-    private val aliveCharactersList: MutableList<CharacterResponse> = mutableListOf()
 
     private val _deadCharactersFlow: MutableStateFlow<CharacterResponse?> = MutableStateFlow(null)
     val deadCharactersFlow: StateFlow<CharacterResponse?> = _deadCharactersFlow
-    private val deadCharactersList: MutableList<CharacterResponse> = mutableListOf()
 
     private val _unknownCharactersFlow: MutableStateFlow<CharacterResponse?> = MutableStateFlow(null)
     val unknownCharactersFlow: StateFlow<CharacterResponse?> = _unknownCharactersFlow
-    private val unknownCharactersList: MutableList<CharacterResponse> = mutableListOf()
 
-    // TODO: Only make network call if the characters dont already exist in the repo
     suspend fun getCharacters(status: String) {
         withContext(Dispatchers.IO) {
             var characterResponse = characterService.getCharactersByStatus(status)
             val pages = characterResponse.info.pages
-            addToList(status, characterResponse)
+            val imageURLs = characterResponse.results.map { it.image }
             for (i in 2..pages) {
                 characterResponse = characterService.getCharactersByStatus(status, page= i)
                 addToList(status, characterResponse)
@@ -44,15 +41,12 @@ class CharacterRepository @Inject constructor(
     private fun addToList(status:String, characterResponse: CharacterResponse) {
         when (status) {
             "alive" -> {
-                aliveCharactersList.add(characterResponse)
                 _aliveCharactersFlow.value = characterResponse
             }
             "dead" -> {
-                deadCharactersList.add(characterResponse)
                 _deadCharactersFlow.value = characterResponse
             }
             "unknown" -> {
-                unknownCharactersList.add(characterResponse)
                 _unknownCharactersFlow.value = characterResponse
             }
         }

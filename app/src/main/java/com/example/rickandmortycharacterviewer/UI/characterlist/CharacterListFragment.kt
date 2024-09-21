@@ -56,7 +56,10 @@ class CharacterListFragment : Fragment() {
     }
 
     fun initView() {
-        // TODO: Handle screen rotation (fragment/activity death)
+        /*
+         TODO: Handle screen rotation (fragment/activity death) - causes the list view to
+        TODO: only populate with the latest flow
+        */
         viewLifecycleOwner.lifecycleScope.launch {
             // repeatOnLifecycle launches the block in a new coroutine every time the
             // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
@@ -87,11 +90,6 @@ class CharacterListFragment : Fragment() {
                 is NetworkResult.Success -> {
                     networkResult.data.let { characterItems ->
                         binding.pbLoadingSpinner.visibility = View.GONE
-                        for (character in characterItems) {
-                            activity?.let {
-                                Glide.with(it).load(character.imageURL).preload()
-                            }
-                        }
                         characterListAdapter.addToCharacterList(characterItems)
                         Log.d("characters", characterItems.size.toString())
                     }
