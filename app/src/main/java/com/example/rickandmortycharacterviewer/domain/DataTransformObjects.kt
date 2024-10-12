@@ -1,7 +1,6 @@
-package com.example.rickandmortycharacterviewer.network
+package com.example.rickandmortycharacterviewer.domain
 
 import com.example.rickandmortycharacterviewer.model.CharacterResponse
-import com.example.rickandmortycharacterviewer.ui.domain.CharacterListItem
 
 
 fun CharacterResponse.asListItemDomainModel() : List<CharacterListItem> {

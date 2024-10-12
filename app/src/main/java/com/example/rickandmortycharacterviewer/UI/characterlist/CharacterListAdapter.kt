@@ -7,13 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.example.rickandmortycharacterviewer.databinding.CharacterListItemBinding
 import com.example.rickandmortycharacterviewer.network.GlideApp
 //import com.example.rickandmortycharacterviewer.network.GlideApp
-import com.example.rickandmortycharacterviewer.ui.domain.CharacterListItem
+import com.example.rickandmortycharacterviewer.domain.CharacterListItem
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
@@ -50,7 +51,7 @@ class CharacterListItemViewHolder(private val itemBinding: CharacterListItemBind
                 characterListItem.apply{
                     pbLoadingSpinnerImage.visibility = View.VISIBLE
                     tvCharacterName.text = name
-                    GlideApp.with(ivCharacterIcon.context).load(imageURL).listener(object : RequestListener<Drawable> {
+                    GlideApp.with(ivCharacterIcon.context).load(imageURL).priority(Priority.IMMEDIATE).listener(object : RequestListener<Drawable> {
                         override fun onLoadFailed(
                             e: GlideException?,
                             model: Any?,

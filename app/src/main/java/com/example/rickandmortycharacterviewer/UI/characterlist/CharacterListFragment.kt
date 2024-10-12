@@ -1,11 +1,13 @@
 package com.example.rickandmortycharacterviewer.ui.characterlist
 
+import android.R.attr.fragment
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,14 +15,20 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListViewModel
+import com.bumptech.glide.ListPreloader.PreloadModelProvider
+import com.bumptech.glide.ListPreloader.PreloadSizeProvider
+import com.bumptech.glide.Priority
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
+import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.example.rickandmortycharacterviewer.R
 import com.example.rickandmortycharacterviewer.databinding.CharacterListFragmentBinding
-import com.example.rickandmortycharacterviewer.ui.characterlist.CharacterListAdapter
+import com.example.rickandmortycharacterviewer.network.GlideApp
 import com.example.rickandmortycharacterviewer.ui.uistate.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -78,9 +86,21 @@ class CharacterListFragment : Fragment() {
             findNavController().navigate(R.id.action_CharacterListFragment_to_MainScreenFragment)
         }
 
+        val preloadModelProvider = characterListViewModel.CharacterPreloadModelProvider()
+        val sizeProvider = ViewPreloadSizeProvider<String>()
+        // TODO: setViewPreloadSizeProviderView
+        RecyclerViewPreloader(GlideApp.with(this), preloadModelProvider, sizeProvider, 5)
+        val preloader = RecyclerViewPreloader(
+            this,
+            preloadModelProvider,
+            sizeProvider,
+            5
+        )
         binding.rvCharactersList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = characterListAdapter
+
+            //addOnScrollListener()
         }
 
     }
@@ -92,6 +112,9 @@ class CharacterListFragment : Fragment() {
                     networkResult.data.let { characterItems ->
                         binding.pbLoadingSpinner.visibility = View.GONE
                         characterListAdapter.addToCharacterList(characterItems)
+                        for (item in characterItems) {
+                            context?.let { GlideApp.with(it).load(item.imageURL).priority(Priority.LOW).preload() }
+                        }
                         Log.d("characters", characterItems.size.toString())
                     }
                 }
@@ -103,6 +126,8 @@ class CharacterListFragment : Fragment() {
 
         }
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

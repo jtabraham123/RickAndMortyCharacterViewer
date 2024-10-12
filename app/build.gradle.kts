@@ -72,6 +72,9 @@ dependencies {
     implementation(libs.glide)
     kapt("com.github.bumptech.glide:compiler:4.16.0")
     implementation("com.github.bumptech.glide:okhttp3-integration:4.16.0")
+    implementation("com.github.bumptech.glide:recyclerview-integration:4.16.0") {
+        exclude(group = "com.android.support")
+    }
 
 }
 

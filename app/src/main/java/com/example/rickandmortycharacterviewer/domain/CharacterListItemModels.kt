@@ -1,4 +1,4 @@
-package com.example.rickandmortycharacterviewer.ui.domain
+package com.example.rickandmortycharacterviewer.domain
 
 data class CharacterListItem(
     val name: String,

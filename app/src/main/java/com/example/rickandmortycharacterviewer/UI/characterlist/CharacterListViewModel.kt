@@ -1,16 +1,25 @@
 package com.example.rickandmortycharacterviewer.ui.characterlist
 
+import android.content.Context
+import android.text.TextUtils
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.rickandmortycharacterviewer.network.asListItemDomainModel
+import com.bumptech.glide.Glide
+import com.bumptech.glide.ListPreloader.PreloadModelProvider
+import com.bumptech.glide.Priority
+import com.bumptech.glide.RequestBuilder
+import com.example.rickandmortycharacterviewer.model.CharacterResponse
+import com.example.rickandmortycharacterviewer.domain.asListItemDomainModel
 import com.example.rickandmortycharacterviewer.repository.CharacterRepository
-import com.example.rickandmortycharacterviewer.ui.domain.CharacterListItem
+import com.example.rickandmortycharacterviewer.domain.CharacterListItem
+import com.example.rickandmortycharacterviewer.network.GlideApp
 import com.example.rickandmortycharacterviewer.ui.uistate.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -21,13 +30,15 @@ import javax.inject.Inject
 @HiltViewModel
 class CharacterListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val characterRepository: CharacterRepository
+    private val characterRepository: CharacterRepository,
+    @ApplicationContext private val appContext: Context
 ) : ViewModel() {
     private val _headerText = MutableLiveData<String>()
     val headerText: LiveData<String> get() = _headerText
     private val _characterListFlow =
         MutableStateFlow<NetworkResult<List<CharacterListItem>>>(NetworkResult.Loading())
     val characterListFlow: StateFlow<NetworkResult<List<CharacterListItem>>> get() = _characterListFlow
+    val characterListItems: MutableList<CharacterListItem> = mutableListOf()
 
     //private val
 
@@ -51,6 +62,12 @@ class CharacterListViewModel @Inject constructor(
         }
     }
 
+    private fun collectNetworkResult(characters: CharacterResponse) {
+        val newCharacterListItems = characters.asListItemDomainModel()
+        _characterListFlow.value = NetworkResult.Success(newCharacterListItems)
+        characterListItems.addAll(newCharacterListItems)
+    }
+
 
     private fun observeCharacterFlow(newStatus: String) {
         viewModelScope.launch {
@@ -59,14 +76,14 @@ class CharacterListViewModel @Inject constructor(
                 "Alive" -> {
                     characterRepository.aliveCharactersFlow.collect{ aliveCharacters ->
                         if (aliveCharacters != null) {
-                            _characterListFlow.value = NetworkResult.Success(aliveCharacters.asListItemDomainModel())
+                            collectNetworkResult(aliveCharacters)
                         }
                     }
                 }
                 "Dead" -> {
                     characterRepository.deadCharactersFlow.collect{ deadCharacters ->
                         if (deadCharacters != null) {
-                            _characterListFlow.value = NetworkResult.Success(deadCharacters.asListItemDomainModel())
+                            collectNetworkResult(deadCharacters)
                         }
                     }
                 }
@@ -75,7 +92,7 @@ class CharacterListViewModel @Inject constructor(
                     // Code to execute if none of the above conditions match
                     characterRepository.unknownCharactersFlow.collect{ unknownCharacters ->
                         if (unknownCharacters != null) {
-                            _characterListFlow.value = NetworkResult.Success(unknownCharacters.asListItemDomainModel())
+                            collectNetworkResult(unknownCharacters)
                         }
                     }
                 }
@@ -90,4 +107,24 @@ class CharacterListViewModel @Inject constructor(
         observeCharacterFlow(newStatus)
         getCharacters(characterStatus)
     }
+
+
+    inner class CharacterPreloadModelProvider : PreloadModelProvider<Any?> {
+        override fun getPreloadItems(position: Int): List<String> {
+            val url: String = characterListItems.get(position).imageURL
+            if (TextUtils.isEmpty(url)) {
+                return emptyList()
+            }
+            return listOf(url)
+        }
+
+        override fun getPreloadRequestBuilder(url: Any): RequestBuilder<*> {
+            return GlideApp.with(appContext)
+                .load(url)
+                .priority(Priority.LOW)
+        }
+
+    }
+
+
 }

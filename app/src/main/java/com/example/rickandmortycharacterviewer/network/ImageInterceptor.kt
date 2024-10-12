@@ -13,10 +13,11 @@ class ImageInterceptor @Inject constructor() : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         ongoingRequests.incrementAndGet()
-        Log.d("Test", "Test")
+        Log.d("Test", "Incrementing onGoing: " + ongoingRequests.get())
         try {
             return chain.proceed(chain.request())
         } finally {
+            Log.d("Test", "Number of requests: " + ongoingRequests.get())
             ongoingRequests.decrementAndGet()
         }
     }
