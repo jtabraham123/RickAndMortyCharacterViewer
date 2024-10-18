@@ -11,6 +11,7 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.example.rickandmortycharacterviewer.databinding.CharacterListItemBinding
 import com.example.rickandmortycharacterviewer.network.GlideApp
 //import com.example.rickandmortycharacterviewer.network.GlideApp
@@ -19,10 +20,17 @@ import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
 @FragmentScoped
-class CharacterListAdapter @Inject constructor() : RecyclerView.Adapter<CharacterListItemViewHolder>(){
+class CharacterListAdapter @Inject constructor(val sizeProvider: ViewPreloadSizeProvider<Any>) : RecyclerView.Adapter<CharacterListItemViewHolder>(){
 
     private var characterList: MutableList<CharacterListItem> = mutableListOf()
 
+    /*
+    interface OnViewReadyListener {
+        fun onViewReady()
+    }
+
+    var onViewReadyListener: OnViewReadyListener? = null
+    */
     fun addToCharacterList(toAdd: List<CharacterListItem>) {
         val firstIndex = characterList.size
         characterList.addAll(toAdd)
@@ -32,6 +40,8 @@ class CharacterListAdapter @Inject constructor() : RecyclerView.Adapter<Characte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterListItemViewHolder {
         val binding = CharacterListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        sizeProvider.setView(binding.pbLoadingSpinnerImage)
+        //onViewReadyListener?.onViewReady()
         return CharacterListItemViewHolder(binding)
     }
 

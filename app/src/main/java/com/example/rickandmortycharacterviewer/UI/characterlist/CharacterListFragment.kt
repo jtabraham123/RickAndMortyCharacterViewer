@@ -20,6 +20,7 @@ import com.bumptech.glide.ListPreloader.PreloadSizeProvider
 import com.bumptech.glide.Priority
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
+import com.bumptech.glide.util.FixedPreloadSizeProvider
 import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.example.rickandmortycharacterviewer.R
 import com.example.rickandmortycharacterviewer.databinding.CharacterListFragmentBinding
@@ -34,8 +35,9 @@ import javax.inject.Inject
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 
+
 @AndroidEntryPoint
-class CharacterListFragment : Fragment() {
+class CharacterListFragment : Fragment() /**, CharacterListAdapter.OnViewReadyListener*/ {
 
     private var _binding: CharacterListFragmentBinding? = null
 
@@ -87,20 +89,13 @@ class CharacterListFragment : Fragment() {
         }
 
         val preloadModelProvider = characterListViewModel.CharacterPreloadModelProvider()
-        val sizeProvider = ViewPreloadSizeProvider<String>()
-        // TODO: setViewPreloadSizeProviderView
-        RecyclerViewPreloader(GlideApp.with(this), preloadModelProvider, sizeProvider, 5)
-        val preloader = RecyclerViewPreloader(
-            this,
-            preloadModelProvider,
-            sizeProvider,
-            5
-        )
+        val sizeProvider = characterListAdapter.sizeProvider
+        val recyclerViewPreloader = RecyclerViewPreloader(GlideApp.with(this), preloadModelProvider, sizeProvider, 5)
+
         binding.rvCharactersList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = characterListAdapter
-
-            //addOnScrollListener()
+            addOnScrollListener(recyclerViewPreloader)
         }
 
     }
@@ -133,4 +128,12 @@ class CharacterListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+/*
+    override fun onViewReady() {
+        val preloadModelProvider = characterListViewModel.CharacterPreloadModelProvider()
+        val sizeProvider = FixedPreloadSizeProvider<Any>(10,39)
+        //sizeProvider.setView(binding.rickAndMortyImage)
+        RecyclerViewPreloader(GlideApp.with(this), preloadModelProvider, sizeProvider, 5)
+    }
+ */
 }
