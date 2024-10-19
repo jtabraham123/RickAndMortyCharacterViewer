@@ -37,7 +37,6 @@ class CharacterListViewModel @Inject constructor(
     private val _characterListFlow =
         MutableStateFlow<NetworkResult<List<CharacterListItem>>>(NetworkResult.Loading())
     val characterListFlow: StateFlow<NetworkResult<List<CharacterListItem>>> get() = _characterListFlow
-    val characterListItems: MutableList<CharacterListItem> = mutableListOf()
     private var status: String = ""
 
     //private val
@@ -64,7 +63,6 @@ class CharacterListViewModel @Inject constructor(
 
     private fun collectNetworkResult(characters: List<CharacterListItem>) {
         _characterListFlow.value = NetworkResult.Success(characters)
-        characterListItems.addAll(characters)
     }
 
 
