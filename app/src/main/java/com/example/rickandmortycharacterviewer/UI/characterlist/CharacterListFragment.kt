@@ -15,16 +15,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.ListPreloader.PreloadModelProvider
-import com.bumptech.glide.ListPreloader.PreloadSizeProvider
-import com.bumptech.glide.Priority
-import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
-import com.bumptech.glide.util.FixedPreloadSizeProvider
-import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.example.rickandmortycharacterviewer.R
 import com.example.rickandmortycharacterviewer.databinding.CharacterListFragmentBinding
-import com.example.rickandmortycharacterviewer.network.GlideApp
 import com.example.rickandmortycharacterviewer.ui.uistate.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -37,7 +30,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class CharacterListFragment : Fragment() /**, CharacterListAdapter.OnViewReadyListener*/ {
+class CharacterListFragment : Fragment() {
 
     private var _binding: CharacterListFragmentBinding? = null
 
@@ -65,7 +58,7 @@ class CharacterListFragment : Fragment() /**, CharacterListAdapter.OnViewReadyLi
         initView()
     }
 
-    fun initView() {
+    private fun initView() {
         /*
          TODO: Handle screen rotation (fragment/activity death) - causes the list view to
         TODO: only populate with the latest flow - think about this for image loading too
@@ -90,7 +83,7 @@ class CharacterListFragment : Fragment() /**, CharacterListAdapter.OnViewReadyLi
 
         val preloadModelProvider = characterListViewModel.CharacterPreloadModelProvider()
         val sizeProvider = characterListAdapter.sizeProvider
-        val recyclerViewPreloader = RecyclerViewPreloader(GlideApp.with(this), preloadModelProvider, sizeProvider, 5)
+        val recyclerViewPreloader = RecyclerViewPreloader(Glide.with(this), preloadModelProvider, sizeProvider, 15)
 
         binding.rvCharactersList.apply {
             layoutManager = LinearLayoutManager(context)
@@ -100,17 +93,13 @@ class CharacterListFragment : Fragment() /**, CharacterListAdapter.OnViewReadyLi
 
     }
 
-    suspend fun observeCharacterListFlow() {
+    private suspend fun observeCharacterListFlow() {
         characterListViewModel.characterListFlow.collect { networkResult ->
             when (networkResult) {
                 is NetworkResult.Success -> {
                     networkResult.data.let { characterItems ->
                         binding.pbLoadingSpinner.visibility = View.GONE
                         characterListAdapter.addToCharacterList(characterItems)
-                        for (item in characterItems) {
-                            context?.let { GlideApp.with(it).load(item.imageURL).priority(Priority.LOW).preload() }
-                        }
-                        Log.d("characters", characterItems.size.toString())
                     }
                 }
                 is NetworkResult.Loading -> {
@@ -128,12 +117,4 @@ class CharacterListFragment : Fragment() /**, CharacterListAdapter.OnViewReadyLi
         super.onDestroyView()
         _binding = null
     }
-/*
-    override fun onViewReady() {
-        val preloadModelProvider = characterListViewModel.CharacterPreloadModelProvider()
-        val sizeProvider = FixedPreloadSizeProvider<Any>(10,39)
-        //sizeProvider.setView(binding.rickAndMortyImage)
-        RecyclerViewPreloader(GlideApp.with(this), preloadModelProvider, sizeProvider, 5)
-    }
- */
 }

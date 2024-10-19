@@ -16,7 +16,6 @@ import com.example.rickandmortycharacterviewer.model.CharacterResponse
 import com.example.rickandmortycharacterviewer.domain.asListItemDomainModel
 import com.example.rickandmortycharacterviewer.repository.CharacterRepository
 import com.example.rickandmortycharacterviewer.domain.CharacterListItem
-import com.example.rickandmortycharacterviewer.network.GlideApp
 import com.example.rickandmortycharacterviewer.ui.uistate.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -29,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CharacterListViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val characterRepository: CharacterRepository,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
@@ -119,7 +118,7 @@ class CharacterListViewModel @Inject constructor(
         }
 
         override fun getPreloadRequestBuilder(url: Any): RequestBuilder<*> {
-            return GlideApp.with(appContext)
+            return Glide.with(appContext)
                 .load(url)
                 .priority(Priority.LOW)
         }

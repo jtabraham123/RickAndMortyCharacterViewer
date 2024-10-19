@@ -13,8 +13,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.example.rickandmortycharacterviewer.databinding.CharacterListItemBinding
-import com.example.rickandmortycharacterviewer.network.GlideApp
-//import com.example.rickandmortycharacterviewer.network.GlideApp
 import com.example.rickandmortycharacterviewer.domain.CharacterListItem
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
@@ -24,24 +22,21 @@ class CharacterListAdapter @Inject constructor(val sizeProvider: ViewPreloadSize
 
     private var characterList: MutableList<CharacterListItem> = mutableListOf()
 
-    /*
-    interface OnViewReadyListener {
-        fun onViewReady()
-    }
-
-    var onViewReadyListener: OnViewReadyListener? = null
-    */
     fun addToCharacterList(toAdd: List<CharacterListItem>) {
         val firstIndex = characterList.size
         characterList.addAll(toAdd)
         notifyItemRangeChanged(firstIndex, toAdd.size)
+        Log.d("size", toAdd.size.toString())
+        Log.d("size", "char list size$itemCount")
+        for (item in toAdd) {
+            Log.d("test", item.name)
+        }
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterListItemViewHolder {
         val binding = CharacterListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         sizeProvider.setView(binding.pbLoadingSpinnerImage)
-        //onViewReadyListener?.onViewReady()
         return CharacterListItemViewHolder(binding)
     }
 
@@ -61,7 +56,7 @@ class CharacterListItemViewHolder(private val itemBinding: CharacterListItemBind
                 characterListItem.apply{
                     pbLoadingSpinnerImage.visibility = View.VISIBLE
                     tvCharacterName.text = name
-                    GlideApp.with(ivCharacterIcon.context).load(imageURL).priority(Priority.IMMEDIATE).listener(object : RequestListener<Drawable> {
+                    Glide.with(ivCharacterIcon.context).load(imageURL).priority(Priority.IMMEDIATE).listener(object : RequestListener<Drawable> {
                         override fun onLoadFailed(
                             e: GlideException?,
                             model: Any?,
@@ -69,8 +64,6 @@ class CharacterListItemViewHolder(private val itemBinding: CharacterListItemBind
                             isFirstResource: Boolean
                         ): Boolean {
                             // Hide progress bar and show error message or placeholder
-                            Log.d("Test", "Load failed: " + e.toString())
-
                             pbLoadingSpinnerImage.visibility = View.GONE
                             return false // Glide handles the error placeholder
                         }
@@ -82,7 +75,6 @@ class CharacterListItemViewHolder(private val itemBinding: CharacterListItemBind
                             dataSource: DataSource,
                             isFirstResource: Boolean
                         ): Boolean {
-                            Log.d("Test", "Load worked")
                             pbLoadingSpinnerImage.visibility = View.GONE
                             return false // Glide handles the error placeholder
                         }
