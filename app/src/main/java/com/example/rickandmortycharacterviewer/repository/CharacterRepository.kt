@@ -1,6 +1,8 @@
 package com.example.rickandmortycharacterviewer.repository
 
 import android.util.Log
+import com.example.rickandmortycharacterviewer.domain.CharacterListItem
+import com.example.rickandmortycharacterviewer.domain.asListItemDomainModel
 import com.example.rickandmortycharacterviewer.model.CharacterResponse
 import com.example.rickandmortycharacterviewer.model.CharacterResults
 import com.example.rickandmortycharacterviewer.network.CharacterService
@@ -16,15 +18,14 @@ import kotlinx.coroutines.flow.flowOf
 class CharacterRepository @Inject constructor(
     private val characterService: CharacterService) {
 
-    // TODO: Check why they need to be private again lol
-    private val _aliveCharactersFlow: MutableStateFlow<CharacterResponse?> = MutableStateFlow(null)
-    val aliveCharactersFlow: StateFlow<CharacterResponse?> = _aliveCharactersFlow
-
-    private val _deadCharactersFlow: MutableStateFlow<CharacterResponse?> = MutableStateFlow(null)
-    val deadCharactersFlow: StateFlow<CharacterResponse?> = _deadCharactersFlow
-
-    private val _unknownCharactersFlow: MutableStateFlow<CharacterResponse?> = MutableStateFlow(null)
-    val unknownCharactersFlow: StateFlow<CharacterResponse?> = _unknownCharactersFlow
+    private val _charactersFlow: MutableMap<String, MutableStateFlow<List<CharacterListItem>?>> = mutableMapOf(
+        "alive" to MutableStateFlow(null),
+        "dead" to MutableStateFlow(null),
+        "unknown" to MutableStateFlow(null)
+    )
+    val aliveCharactersFlow = _charactersFlow["alive"]
+    val deadCharactersFlow = _charactersFlow["dead"]
+    val unknownCharactersFlow = _charactersFlow["unknown"]
 
     suspend fun getCharacters(status: String) {
         withContext(Dispatchers.IO) {
@@ -39,17 +40,7 @@ class CharacterRepository @Inject constructor(
     }
 
     private fun addToList(status:String, characterResponse: CharacterResponse) {
-        when (status) {
-            "alive" -> {
-                _aliveCharactersFlow.value = characterResponse
-            }
-            "dead" -> {
-                _deadCharactersFlow.value = characterResponse
-            }
-            "unknown" -> {
-                _unknownCharactersFlow.value = characterResponse
-            }
-        }
+        _charactersFlow[status]?.value = characterResponse.asListItemDomainModel()
     }
 
 }

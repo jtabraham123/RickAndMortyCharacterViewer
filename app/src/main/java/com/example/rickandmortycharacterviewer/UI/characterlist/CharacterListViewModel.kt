@@ -61,10 +61,9 @@ class CharacterListViewModel @Inject constructor(
         }
     }
 
-    private fun collectNetworkResult(characters: CharacterResponse) {
-        val newCharacterListItems = characters.asListItemDomainModel()
-        _characterListFlow.value = NetworkResult.Success(newCharacterListItems)
-        characterListItems.addAll(newCharacterListItems)
+    private fun collectNetworkResult(characters: List<CharacterListItem>) {
+        _characterListFlow.value = NetworkResult.Success(characters)
+        characterListItems.addAll(characters)
     }
 
 
@@ -73,14 +72,14 @@ class CharacterListViewModel @Inject constructor(
             Log.d("characters", "new characters fetched")
             when (newStatus) {
                 "Alive" -> {
-                    characterRepository.aliveCharactersFlow.collect{ aliveCharacters ->
+                    characterRepository.aliveCharactersFlow?.collect{ aliveCharacters ->
                         if (aliveCharacters != null) {
                             collectNetworkResult(aliveCharacters)
                         }
                     }
                 }
                 "Dead" -> {
-                    characterRepository.deadCharactersFlow.collect{ deadCharacters ->
+                    characterRepository.deadCharactersFlow?.collect{ deadCharacters ->
                         if (deadCharacters != null) {
                             collectNetworkResult(deadCharacters)
                         }
@@ -89,7 +88,7 @@ class CharacterListViewModel @Inject constructor(
 
                 "Unknown" -> {
                     // Code to execute if none of the above conditions match
-                    characterRepository.unknownCharactersFlow.collect{ unknownCharacters ->
+                    characterRepository.unknownCharactersFlow?.collect{ unknownCharacters ->
                         if (unknownCharacters != null) {
                             collectNetworkResult(unknownCharacters)
                         }
