@@ -38,6 +38,7 @@ class CharacterListViewModel @Inject constructor(
         MutableStateFlow<NetworkResult<List<CharacterListItem>>>(NetworkResult.Loading())
     val characterListFlow: StateFlow<NetworkResult<List<CharacterListItem>>> get() = _characterListFlow
     val characterListItems: MutableList<CharacterListItem> = mutableListOf()
+    private var status: String = ""
 
     //private val
 
@@ -67,32 +68,13 @@ class CharacterListViewModel @Inject constructor(
     }
 
 
-    private fun observeCharacterFlow(newStatus: String) {
+    private fun observeCharacterFlow(characterStatus: String) {
         viewModelScope.launch {
             Log.d("characters", "new characters fetched")
-            when (newStatus) {
-                "Alive" -> {
-                    characterRepository.aliveCharactersFlow?.collect{ aliveCharacters ->
-                        if (aliveCharacters != null) {
-                            collectNetworkResult(aliveCharacters)
-                        }
-                    }
-                }
-                "Dead" -> {
-                    characterRepository.deadCharactersFlow?.collect{ deadCharacters ->
-                        if (deadCharacters != null) {
-                            collectNetworkResult(deadCharacters)
-                        }
-                    }
-                }
 
-                "Unknown" -> {
-                    // Code to execute if none of the above conditions match
-                    characterRepository.unknownCharactersFlow?.collect{ unknownCharacters ->
-                        if (unknownCharacters != null) {
-                            collectNetworkResult(unknownCharacters)
-                        }
-                    }
+            characterRepository.charactersFlow[characterStatus]?.collect { newCharacters ->
+                if (newCharacters != null) {
+                    collectNetworkResult(newCharacters)
                 }
             }
         }
@@ -102,14 +84,15 @@ class CharacterListViewModel @Inject constructor(
     private fun initializeWithStatus(newStatus: String) {
         _headerText.value = newStatus + " Characters"
         val characterStatus = newStatus.lowercase()
-        observeCharacterFlow(newStatus)
+        observeCharacterFlow(characterStatus)
+        status = newStatus
         getCharacters(characterStatus)
     }
 
 
     inner class CharacterPreloadModelProvider : PreloadModelProvider<Any?> {
-        override fun getPreloadItems(position: Int): List<String> {
-            val url: String = characterListItems.get(position).imageURL
+        override fun getPreloadItems(position: Int): List<String?> {
+            val url = characterRepository.charactersList[status]?.get(position)?.imageURL
             if (TextUtils.isEmpty(url)) {
                 return emptyList()
             }

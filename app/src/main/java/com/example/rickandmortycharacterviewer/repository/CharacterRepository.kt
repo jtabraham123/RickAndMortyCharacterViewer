@@ -23,9 +23,13 @@ class CharacterRepository @Inject constructor(
         "dead" to MutableStateFlow(null),
         "unknown" to MutableStateFlow(null)
     )
-    val aliveCharactersFlow = _charactersFlow["alive"]
-    val deadCharactersFlow = _charactersFlow["dead"]
-    val unknownCharactersFlow = _charactersFlow["unknown"]
+
+    val charactersFlow: Map<String, StateFlow<List<CharacterListItem>?>> = _charactersFlow
+    val charactersList: MutableMap<String, MutableList<CharacterListItem>> = mutableMapOf(
+        "alive" to mutableListOf(),
+        "dead" to mutableListOf(),
+        "unknown" to mutableListOf()
+    )
 
     suspend fun getCharacters(status: String) {
         withContext(Dispatchers.IO) {
@@ -34,13 +38,15 @@ class CharacterRepository @Inject constructor(
             val imageURLs = characterResponse.results.map { it.image }
             for (i in 2..pages) {
                 characterResponse = characterService.getCharactersByStatus(status, page= i)
-                addToList(status, characterResponse)
+                addToFlowAndList(status, characterResponse)
             }
         }
     }
 
-    private fun addToList(status:String, characterResponse: CharacterResponse) {
-        _charactersFlow[status]?.value = characterResponse.asListItemDomainModel()
+    private fun addToFlowAndList(status:String, characterResponse: CharacterResponse) {
+        val domainObjects = characterResponse.asListItemDomainModel()
+        charactersList[status]?.addAll(domainObjects)
+        _charactersFlow[status]?.value = domainObjects
     }
 
 }
