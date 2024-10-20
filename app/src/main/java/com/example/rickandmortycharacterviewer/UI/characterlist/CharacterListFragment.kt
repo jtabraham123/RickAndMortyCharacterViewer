@@ -95,9 +95,9 @@ class CharacterListFragment : Fragment() {
         characterListViewModel.characterListFlow.collect { networkResult ->
             when (networkResult) {
                 is NetworkResult.Success -> {
-                    networkResult.data.let { characterItems ->
+                    networkResult.data.let { characterList ->
                         binding.pbLoadingSpinner.visibility = View.GONE
-                        characterListAdapter.addToCharacterList(characterItems)
+                        characterListAdapter.addToCharacterList(characterList.list)
                     }
                 }
                 is NetworkResult.Loading -> {

@@ -1,6 +1,7 @@
 package com.example.rickandmortycharacterviewer.repository
 
 import android.util.Log
+import com.example.rickandmortycharacterviewer.domain.CharacterList
 import com.example.rickandmortycharacterviewer.domain.CharacterListItem
 import com.example.rickandmortycharacterviewer.domain.asListItemDomainModel
 import com.example.rickandmortycharacterviewer.model.CharacterResponse
@@ -18,13 +19,13 @@ import kotlinx.coroutines.flow.flowOf
 class CharacterRepository @Inject constructor(
     private val characterService: CharacterService) {
 
-    private val _charactersFlow: MutableMap<String, MutableStateFlow<List<CharacterListItem>?>> = mutableMapOf(
+    private val _charactersFlow: MutableMap<String, MutableStateFlow<CharacterList?>> = mutableMapOf(
         "alive" to MutableStateFlow(null),
         "dead" to MutableStateFlow(null),
         "unknown" to MutableStateFlow(null)
     )
 
-    val charactersFlow: Map<String, StateFlow<List<CharacterListItem>?>> = _charactersFlow
+    val charactersFlow: Map<String, StateFlow<CharacterList?>> = _charactersFlow
     val charactersList: MutableMap<String, MutableList<CharacterListItem>> = mutableMapOf(
         "alive" to mutableListOf(),
         "dead" to mutableListOf(),
@@ -42,10 +43,10 @@ class CharacterRepository @Inject constructor(
             }
         }
     }
-
+    // TODO: Fix this so theyre sorted
     private fun addToFlowAndList(status:String, characterResponse: CharacterResponse) {
         val domainObjects = characterResponse.asListItemDomainModel()
-        charactersList[status]?.addAll(domainObjects)
+        charactersList[status]?.addAll(domainObjects.list)
         _charactersFlow[status]?.value = domainObjects
     }
 

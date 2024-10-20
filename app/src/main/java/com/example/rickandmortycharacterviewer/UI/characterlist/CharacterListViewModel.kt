@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.bumptech.glide.Priority
 import com.bumptech.glide.RequestBuilder
+import com.example.rickandmortycharacterviewer.domain.CharacterList
 import com.example.rickandmortycharacterviewer.model.CharacterResponse
 import com.example.rickandmortycharacterviewer.domain.asListItemDomainModel
 import com.example.rickandmortycharacterviewer.repository.CharacterRepository
@@ -35,16 +36,14 @@ class CharacterListViewModel @Inject constructor(
     private val _headerText = MutableLiveData<String>()
     val headerText: LiveData<String> get() = _headerText
     private val _characterListFlow =
-        MutableStateFlow<NetworkResult<List<CharacterListItem>>>(NetworkResult.Loading())
-    val characterListFlow: StateFlow<NetworkResult<List<CharacterListItem>>> get() = _characterListFlow
+        MutableStateFlow<NetworkResult<CharacterList>>(NetworkResult.Loading())
+    val characterListFlow: StateFlow<NetworkResult<CharacterList>> get() = _characterListFlow
     private var status: String = ""
-
-    //private val
 
 
     init {
-        val status = savedStateHandle.get<String>("characterStatus") ?: "defaultStatus"
-        initializeWithStatus(status)
+        val initialStatus = savedStateHandle.get<String>("characterStatus") ?: "defaultStatus"
+        initializeWithStatus(initialStatus)
     }
 
     private fun getCharacters(characterStatus: String) {
@@ -61,7 +60,7 @@ class CharacterListViewModel @Inject constructor(
         }
     }
 
-    private fun collectNetworkResult(characters: List<CharacterListItem>) {
+    private fun collectNetworkResult(characters: CharacterList) {
         _characterListFlow.value = NetworkResult.Success(characters)
     }
 
@@ -69,7 +68,6 @@ class CharacterListViewModel @Inject constructor(
     private fun observeCharacterFlow(characterStatus: String) {
         viewModelScope.launch {
             Log.d("characters", "new characters fetched")
-
             characterRepository.charactersFlow[characterStatus]?.collect { newCharacters ->
                 if (newCharacters != null) {
                     collectNetworkResult(newCharacters)
